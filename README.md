@@ -1,5 +1,7 @@
 # Code de la Route Sénégalais - Chatbot RAG
 
+🚦 **[Accéder à la démo en ligne](https://code-route-chatbot.onrender.com)**
+
 Ce projet est un chatbot basé sur le Code de la route sénégalais, utilisant la technologie RAG (Retrieval-Augmented Generation). Il découpe un document PDF du code de la route par article, stocke les fragments dans une base vectorielle, et utilise Gemini pour générer des réponses précises en citant les articles.
 
 ## Prérequis
