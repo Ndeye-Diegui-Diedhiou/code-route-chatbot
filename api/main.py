@@ -1,6 +1,8 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import chromadb
 from chromadb.utils import embedding_functions
@@ -126,3 +128,6 @@ RÉPONSE :"""
         answer=answer,
         articles=articles_list
     )
+
+# Serve the frontend static files
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
