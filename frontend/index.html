@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot - Code de la Route Sénégalais</title>
+    <style>
+        :root {
+            --primary: #008f4c; /* Vert du drapeau du Sénégal */
+            --primary-light: #2bc179;
+            --secondary: #fcd116; /* Jaune */
+            --danger: #e31221; /* Rouge */
+            --bg-color: #f5f7fa;
+            --text-color: #333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .header p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background-color: var(--primary-light);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .bot-message {
+            background-color: #eee;
+            color: var(--text-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .articles-sources {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .article-card {
+            background: #fff;
+            border-left: 3px solid var(--secondary);
+            padding: 8px 12px;
+            margin-top: 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .article-card summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .article-text {
+            margin-top: 8px;
+            white-space: pre-wrap;
+            color: #555;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 0 25px;
+            margin-left: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #00703c;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .loading {
+            align-self: flex-start;
+            display: none;
+            color: #888;
+            font-style: italic;
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+        
+        /* Markdown simples pour le bot */
+        .bot-message strong {
+            color: #111;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="header">
+            <h1>Code de la Route du Sénégal</h1>
+            <p>Posez vos questions sur la réglementation routière</p>
+        </div>
+        
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">
+                Bonjour ! Je suis un assistant virtuel entraîné sur le décret du Code de la route sénégalais. Posez-moi une question !
+            </div>
+        </div>
+
+        <div class="loading" id="loading">Recherche dans les articles en cours...</div>
+        
+        <div class="input-area">
+            <input type="text" id="question-input" placeholder="Ex: Quelle est la limitation de vitesse en agglomération ?" autocomplete="off">
+            <button id="send-btn">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/ask";
+        const chatBox = document.getElementById("chat-box");
+        const questionInput = document.getElementById("question-input");
+        const sendBtn = document.getElementById("send-btn");
+        const loading = document.getElementById("loading");
+
+        function addMessage(text, isUser = false, articles = []) {
+            const msgDiv = document.createElement("div");
+            msgDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            // Format markdown basique pour le gras
+            let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            let contentHTML = `<div>${formattedText.replace(/\n/g, '<br>')}</div>`;
+
+            if (!isUser && articles.length > 0) {
+                let articlesHTML = `<div class="articles-sources"><strong>Sources consultées :</strong>`;
+                articles.forEach(art => {
+                    articlesHTML += `
+                        <div class="article-card">
+                            <details>
+                                <summary>${art.article_number} (Page ${art.page})</summary>
+                                <div class="article-text">${art.text}</div>
+                            </details>
+                        </div>
+                    `;
+                });
+                articlesHTML += `</div>`;
+                contentHTML += articlesHTML;
+            }
+
+            msgDiv.innerHTML = contentHTML;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function askQuestion() {
+            const question = questionInput.value.trim();
+            if (!question) return;
+
+            addMessage(question, true);
+            questionInput.value = "";
+            loading.style.display = "block";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ question: question })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const data = await response.json();
+                loading.style.display = "none";
+                addMessage(data.answer, false, data.articles);
+            } catch (error) {
+                loading.style.display = "none";
+                addMessage(`Désolé, une erreur s'est produite lors de la connexion au serveur. (${error.message})`, false);
+            }
+        }
+
+        sendBtn.addEventListener("click", askQuestion);
+        questionInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
