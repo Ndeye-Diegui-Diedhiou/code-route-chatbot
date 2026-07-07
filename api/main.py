@@ -5,19 +5,19 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import chromadb
 from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
-from google import genai
-from google.genai import types
+from groq import Groq
 from dotenv import load_dotenv
 
 # Chargement des variables d'environnement
 load_dotenv()
 
-# Configuration Gemini (nouveau SDK google.genai)
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY non trouvée dans le fichier .env")
+# Configuration Groq (Llama 3.3 70B — open source, gratuit)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+if not GROQ_API_KEY:
+    raise ValueError("GROQ_API_KEY non trouvée dans le fichier .env")
 
-client_genai = genai.Client(api_key=GEMINI_API_KEY)
+groq_client = Groq(api_key=GROQ_API_KEY)
+MODEL = "llama-3.3-70b-versatile"
 
 # Configuration ChromaDB — embedding léger ONNX (pas de PyTorch)
 CHROMA_DB_DIR = "chroma_db"
@@ -97,37 +97,36 @@ def ask_question(req: QuestionRequest):
 
     context_str = "\n".join(context_parts)
 
-    # 3. Prompt pour Gemini
-    prompt = f"""Tu es un assistant expert sur le Code de la route du Sénégal.
-On t'a posé la question suivante : "{req.question}"
-
-Voici le contexte extrait directement du texte officiel du Code de la route. Tu dois répondre UNIQUEMENT en te basant sur ce contexte.
-Si le contexte ne contient pas la réponse, réponds "Je ne trouve pas d'article correspondant dans le Code de la route".
-
-Tu DOIS CITER les numéros d'articles que tu utilises pour ta réponse (ex: "Selon l'ARTICLE 42...").
-
-CONTEXTE :
-{context_str}
-
-RÉPONSE :"""
-
-    # 4. Génération de la réponse avec le nouveau SDK
+    # 3. Génération avec Llama 3.3 70B via Groq
     try:
-        response = client_genai.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.2,
-                max_output_tokens=1024,
-            )
+        chat_completion = groq_client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Tu es un assistant expert sur le Code de la route du Sénégal. "
+                        "Tu réponds UNIQUEMENT en te basant sur le contexte fourni par le décret officiel. "
+                        "Si le contexte ne contient pas la réponse, dis-le clairement. "
+                        "Tu DOIS citer les numéros d'articles utilisés (ex: 'Selon l\\'ARTICLE 42...'). "
+                        "Réponds en français, de manière claire et structurée."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": f"Question : {req.question}\n\nContexte extrait du Code de la route :\n{context_str}"
+                }
+            ],
+            temperature=0.2,
+            max_tokens=1024,
         )
-        answer = response.text
+        answer = chat_completion.choices[0].message.content
     except Exception as e:
         err = str(e)
-        if "429" in err or "RESOURCE_EXHAUSTED" in err:
-            answer = "⚠️ Le quota journalier de l'API Gemini est atteint. Veuillez réessayer dans quelques heures ou vérifier votre plan sur [Google AI Studio](https://aistudio.google.com/)."
+        if "429" in err or "rate_limit" in err.lower():
+            answer = "⚠️ Limite de requêtes atteinte. Veuillez réessayer dans quelques instants."
         else:
-            answer = f"Erreur lors de la génération avec Gemini : {err}"
+            answer = f"Erreur lors de la génération : {err}"
 
     return AnswerResponse(
         answer=answer,
