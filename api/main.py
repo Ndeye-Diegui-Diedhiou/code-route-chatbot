@@ -62,32 +62,55 @@ def ask_question(req: QuestionRequest):
             articles=[]
         )
 
-    # 1. Recherche dans ChromaDB
+    # 1. Reformulation de la question pour optimiser la recherche sémantique (Vocabulaire juridique)
+    search_query = req.question
+    try:
+        rewrite_completion = groq_client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": "Tu es un expert du code de la route sénégalais. Ton but est de transformer la question familière de l'utilisateur en une phrase exacte que l'on trouverait dans le texte de loi (le décret). Par exemple, 'doubler' devient 'dépassement', 'vitesse en ville' devient 'vitesse en agglomération'. Fais une seule courte phrase reprenant les termes légaux exacts de la question."},
+                {"role": "user", "content": req.question}
+            ],
+            temperature=0.1,
+            max_tokens=25,
+        )
+        search_query = rewrite_completion.choices[0].message.content.strip().replace('"', '')
+    except Exception:
+        pass
+
+    # 2. Recherche dans ChromaDB avec les DEUX requêtes pour maximiser les chances
     results = collection.query(
-        query_texts=[req.question],
-        n_results=4
+        query_texts=[search_query, req.question],
+        n_results=3
     )
-
-    if not results['documents'] or not results['documents'][0]:
+    
+    # Fusion des résultats des deux requêtes pour éviter les doublons
+    unique_docs = {}
+    for j in range(len(results['documents'])):
+        for i, doc_id in enumerate(results['ids'][j]):
+            if doc_id not in unique_docs:
+                unique_docs[doc_id] = {
+                    'text': results['documents'][j][i],
+                    'metadata': results['metadatas'][j][i]
+                }
+                
+    if not unique_docs:
         return AnswerResponse(
             answer="Je ne trouve pas d'article correspondant dans le Code de la route.",
             articles=[]
         )
 
-    distances = results['distances'][0]
-    if distances[0] > 0.8:
-        return AnswerResponse(
-            answer="Je ne trouve pas d'article correspondant dans le Code de la route.",
-            articles=[]
-        )
+    # On a retiré le filtre strict sur la distance car l'embedding Default est parfois imprécis
+    # (distance > 0.8 bloquait de bons résultats)
 
-    # 2. Construction du contexte
+    # 3. Construction du contexte
     context_parts = []
     articles_list = []
 
-    for i in range(len(results['documents'][0])):
-        text = results['documents'][0][i]
-        meta = results['metadatas'][0][i]
+    # Prendre les 5 premiers documents uniques max
+    for doc in list(unique_docs.values())[:5]:
+        text = doc['text']
+        meta = doc['metadata']
 
         article_number = meta.get('article_number', 'INCONNU')
         page = meta.get('page', 0)
@@ -97,7 +120,7 @@ def ask_question(req: QuestionRequest):
 
     context_str = "\n".join(context_parts)
 
-    # 3. Génération avec Llama 3.3 70B via Groq
+    # 4. Génération avec Llama 3.3 70B via Groq
     try:
         chat_completion = groq_client.chat.completions.create(
             model=MODEL,
