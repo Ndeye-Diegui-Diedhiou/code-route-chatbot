@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code de la Route — Assistant Juridique Sénégal</title>
+    <title>Code de la Route — Assistant Révisions Sénégal</title>
     <meta name="description" content="Assistant expert sur le Code de la route sénégalais. Réponses basées sur le décret officiel.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -487,7 +487,7 @@
         </div>
         <div class="header-content">
             <h1>Code de la Route</h1>
-            <p>Assistant Juridique · Sénégal</p>
+            <p>Assistant Révisions · Sénégal</p>
         </div>
         <div class="status-indicator">
             <div class="status-dot"></div>
@@ -499,10 +499,10 @@
     <main class="chat-box" id="chat-box">
         <div class="welcome-section">
             <div class="welcome-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v6h6v10H6zm2-3h8v2H8v-2zm0-4h8v2H8v-2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
             </div>
-            <h2>Interrogez la loi.</h2>
-            <p>Posez vos questions sur la réglementation routière sénégalaise. L'assistant parcourt les 766 articles du décret officiel pour vous fournir une réponse précise et sourcée.</p>
+            <h2>Révisez votre Code.</h2>
+            <p>Posez vos questions pour apprendre ou réviser la réglementation routière sénégalaise. Votre coach IA s'appuie sur le décret officiel pour vous donner la bonne réponse.</p>
         </div>
     </main>
 
@@ -522,10 +522,10 @@
 
     <!-- SUGGESTIONS -->
     <div class="suggestions-wrapper" id="suggestions">
-        <button class="suggestion-chip" onclick="suggest(this)">Limitation de vitesse en agglomération</button>
-        <button class="suggestion-chip" onclick="suggest(this)">Règles de priorité à droite</button>
-        <button class="suggestion-chip" onclick="suggest(this)">Port de la ceinture de sécurité</button>
-        <button class="suggestion-chip" onclick="suggest(this)">Sanctions pour alcool au volant</button>
+        <button class="suggestion-chip" onclick="suggest(this)">Quelle est la vitesse max pour un apprenti ?</button>
+        <button class="suggestion-chip" onclick="suggest(this)">Dans quel cas puis-je doubler par la droite ?</button>
+        <button class="suggestion-chip" onclick="suggest(this)">Qui est dispensé de la ceinture en ville ?</button>
+        <button class="suggestion-chip" onclick="suggest(this)">À quelle distance d'un virage stationner ?</button>
     </div>
 
     <!-- INPUT -->
@@ -578,7 +578,7 @@
         const avatar = document.createElement('div');
         avatar.className = `avatar ${isUser ? 'user' : 'bot'}`;
         if (isUser) {
-            avatar.textContent = 'US'; // User Initials representation
+            avatar.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
         } else {
             avatar.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`;
         }
