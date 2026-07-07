@@ -3,422 +3,544 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code de la Route — Assistant IA Sénégal</title>
-    <meta name="description" content="Posez vos questions sur le Code de la route sénégalais. Notre IA retrouve et cite les articles officiels.">
+    <title>Code de la Route — Assistant Juridique Sénégal</title>
+    <meta name="description" content="Assistant expert sur le Code de la route sénégalais. Réponses basées sur le décret officiel.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg:          #0f1117;
-            --surface:     #1a1d27;
-            --surface-2:   #22263a;
-            --border:      rgba(255,255,255,0.07);
-            --accent:      #00c97a;
-            --accent-dim:  rgba(0,201,122,0.12);
-            --accent-2:    #f0c040;
-            --text-primary:#e8eaf0;
-            --text-muted:  #7b82a0;
-            --user-bubble: linear-gradient(135deg,#00c97a,#009f60);
-            --bot-bubble:  #22263a;
-            --shadow-lg:   0 24px 60px rgba(0,0,0,0.5);
-            --radius:      14px;
-            --radius-sm:   8px;
-            --font:        'Inter', system-ui, sans-serif;
+            /* Palette Premium : Papier & Vert Forêt */
+            --bg-color:        #F9FAEC; /* Très léger crème/vert pâle */
+            --bg-color:        #F9F9F8;
+            --surface:         #FFFFFF;
+            --surface-hover:   #F3F4F1;
+            --border:          #E2E4E0;
+            
+            --primary:         #0F3E2B; /* Vert forêt très sombre, officiel */
+            --primary-light:   #1A5C42;
+            --accent-gold:     #C4A163; /* Or discret */
+            --accent-bg:       rgba(15, 62, 43, 0.04);
+            
+            --text-main:       #1D211F;
+            --text-muted:      #5E6662;
+            --text-light:      #8D9691;
+            
+            --shadow-sm:       0 2px 8px rgba(15, 62, 43, 0.04);
+            --shadow-md:       0 8px 24px rgba(15, 62, 43, 0.06);
+            
+            --radius-lg:       12px;
+            --radius-md:       8px;
+            
+            --font-display:    'Playfair Display', serif;
+            --font-body:       'Plus Jakarta Sans', system-ui, sans-serif;
+            
+            --max-width:       760px;
         }
 
         html, body {
             height: 100%;
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text-primary);
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-main);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* ── LAYOUT ── */
-        .app {
+        .app-container {
             display: flex;
             flex-direction: column;
             height: 100vh;
-            max-width: 820px;
+            max-width: var(--max-width);
             margin: 0 auto;
+            position: relative;
+            background: var(--surface);
+            box-shadow: 0 0 40px rgba(0,0,0,0.02);
         }
 
         /* ── HEADER ── */
         .header {
             flex-shrink: 0;
-            padding: 18px 28px;
+            padding: 24px 32px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
             border-bottom: 1px solid var(--border);
-            background: rgba(26,29,39,0.85);
-            backdrop-filter: blur(20px);
-            position: sticky; top: 0; z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky; 
+            top: 0; 
+            z-index: 10;
         }
 
-        .header-icon {
-            width: 46px; height: 46px;
-            border-radius: 12px;
-            background: var(--accent-dim);
-            border: 1px solid rgba(0,201,122,0.25);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px;
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(15, 62, 43, 0.15);
+        }
+        .header-logo svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
         }
 
-        .header-text h1 {
-            font-size: 1rem;
+        .header-content h1 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--primary);
             letter-spacing: -0.01em;
+            line-height: 1.2;
         }
-        .header-text p {
+
+        .header-content p {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        .status-indicator {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             font-size: 0.75rem;
             color: var(--text-muted);
-            margin-top: 2px;
+            font-weight: 500;
         }
-
         .status-dot {
-            width: 8px; height: 8px;
+            width: 6px; height: 6px;
             border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 8px var(--accent);
-            margin-left: auto;
-            animation: pulse 2.5s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50%      { opacity: 0.4; }
+            background: #2E965D;
         }
 
-        /* ── CHAT BOX ── */
+        /* ── CHAT AREA ── */
         .chat-box {
             flex: 1;
             overflow-y: auto;
-            padding: 28px 24px;
+            padding: 32px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 32px;
             scroll-behavior: smooth;
+            background-color: var(--bg-color);
         }
-        .chat-box::-webkit-scrollbar { width: 4px; }
+        
+        .chat-box::-webkit-scrollbar { width: 6px; }
         .chat-box::-webkit-scrollbar-track { background: transparent; }
-        .chat-box::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 4px; }
+        .chat-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* ── WELCOME ── */
+        .welcome-section {
+            text-align: center;
+            padding: 60px 20px 40px;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        
+        .welcome-icon {
+            color: var(--accent-gold);
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+        .welcome-icon svg { width: 42px; height: 42px; }
+
+        .welcome-section h2 {
+            font-family: var(--font-display);
+            font-size: 2.25rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 16px;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+        
+        .welcome-section p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
 
         /* ── MESSAGES ── */
         .msg-row {
             display: flex;
-            gap: 10px;
-            align-items: flex-end;
-            animation: slideUp .3s cubic-bezier(.22,.68,0,1.2) both;
+            gap: 16px;
+            animation: fadeIn .4s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
         }
-        @keyframes slideUp {
-            from { opacity:0; transform: translateY(14px); }
-            to   { opacity:1; transform: translateY(0); }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .msg-row.user { flex-direction: row-reverse; }
+        .msg-row.user {
+            flex-direction: row-reverse;
+        }
 
         .avatar {
-            width: 30px; height: 30px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
             flex-shrink: 0;
-        }
-        .avatar.bot  { background: var(--accent-dim); border: 1px solid rgba(0,201,122,0.2); }
-        .avatar.user { background: var(--surface-2); border: 1px solid var(--border); }
-
-        .bubble {
-            max-width: 74%;
-            padding: 13px 17px;
-            border-radius: var(--radius);
-            font-size: 0.9rem;
-            line-height: 1.65;
-        }
-        .bubble.user {
-            background: var(--user-bubble);
-            color: #fff;
-            border-bottom-right-radius: 4px;
-            font-weight: 500;
-        }
-        .bubble.bot {
-            background: var(--bot-bubble);
-            border: 1px solid var(--border);
-            border-bottom-left-radius: 4px;
-            color: var(--text-primary);
-        }
-
-        /* Warning/error styles in bot bubble */
-        .bubble.bot .warning-box {
-            background: rgba(240,192,64,0.1);
-            border: 1px solid rgba(240,192,64,0.25);
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
-            color: var(--accent-2);
+            font-weight: 600;
             font-size: 0.85rem;
         }
-        .bubble.bot .warning-box a { color: var(--accent-2); }
-
-        /* ── SOURCES SECTION ── */
-        .sources {
-            margin-top: 14px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
+        .avatar.bot {
+            background: var(--primary);
+            color: #fff;
         }
-        .sources-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .source-card {
+        .avatar.bot svg { width: 18px; height: 18px; fill: currentColor; }
+        
+        .avatar.user {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            margin-bottom: 6px;
-            overflow: hidden;
-            transition: border-color .2s;
+            color: var(--text-muted);
         }
-        .source-card:hover { border-color: rgba(0,201,122,0.3); }
 
-        .source-card summary {
-            list-style: none;
-            padding: 9px 13px;
-            cursor: pointer;
+        .bubble {
+            max-width: 80%;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            border-radius: var(--radius-lg);
+        }
+        
+        .bubble.user {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-sm);
+            border-top-right-radius: 4px;
+        }
+        
+        .bubble.bot {
+            color: var(--text-main);
+            padding: 8px 0; /* Minimalist style, no background box */
+        }
+        
+        .bubble.bot strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* ── WARNINGS ── */
+        .bubble.bot .warning-box {
+            background: #FFF9ED;
+            border-left: 4px solid var(--accent-gold);
+            padding: 16px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            color: #8C6A21;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        /* ── SOURCES (ACCORDION) ── */
+        .sources-container {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .sources-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
+        }
+        .sources-title::before {
+            content: '';
+            display: block;
+            width: 12px; height: 2px;
+            background: var(--accent-gold);
+        }
+
+        .source-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+        
+        .source-item:hover {
+            border-color: #CFCFCF;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .source-item summary {
+            list-style: none;
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: var(--accent);
+            color: var(--primary);
             user-select: none;
         }
-        .source-card summary::-webkit-details-marker { display: none; }
-
-        .source-card summary .badge {
-            background: var(--accent-dim);
-            border: 1px solid rgba(0,201,122,0.2);
-            color: var(--accent);
-            border-radius: 5px;
-            padding: 1px 7px;
-            font-size: 0.7rem;
+        
+        .source-item summary::-webkit-details-marker { display: none; }
+        
+        .source-badge {
+            background: var(--accent-bg);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: var(--font-body);
             font-weight: 600;
+            font-size: 0.75rem;
+            margin-right: 12px;
+            border: 1px solid rgba(15, 62, 43, 0.1);
         }
-        .source-card summary .page-num {
+        
+        .source-page {
             margin-left: auto;
-            color: var(--text-muted);
+            color: var(--text-light);
             font-weight: 400;
-            font-size: 0.73rem;
+            font-size: 0.75rem;
         }
-        .source-card summary .chevron {
-            transition: transform .25s;
-            color: var(--text-muted);
-            font-size: 10px;
+        
+        .source-icon {
+            margin-right: 12px;
+            color: var(--text-light);
+            transition: transform 0.3s ease;
         }
-        .source-card[open] summary .chevron { transform: rotate(90deg); }
+        
+        .source-item[open] summary .source-icon {
+            transform: rotate(90deg);
+            color: var(--primary);
+        }
 
-        .source-text {
-            padding: 0 13px 11px;
-            font-size: 0.78rem;
+        .source-content {
+            padding: 0 16px 16px 16px;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            white-space: pre-wrap;
-            max-height: 160px;
-            overflow-y: auto;
-            line-height: 1.6;
+            line-height: 1.7;
             border-top: 1px solid var(--border);
+            margin-top: 4px;
+            padding-top: 12px;
         }
-        .source-text::-webkit-scrollbar { width: 3px; }
-        .source-text::-webkit-scrollbar-thumb { background: var(--surface-2); }
 
         /* ── TYPING INDICATOR ── */
-        .typing-row { display: flex; gap: 10px; align-items: flex-end; }
-        .typing-bubble {
-            background: var(--bot-bubble);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            border-bottom-left-radius: 4px;
-            padding: 14px 18px;
-            display: none;
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 0;
         }
-        .typing-bubble.visible { display: flex; gap: 5px; align-items: center; }
-        .dot {
-            width: 7px; height: 7px;
+        .typing-dot {
+            width: 6px; height: 6px;
+            background-color: var(--border);
             border-radius: 50%;
-            background: var(--text-muted);
-            animation: bounce 1.2s ease-in-out infinite;
+            animation: typeBounce 1.4s infinite ease-in-out both;
         }
-        .dot:nth-child(2) { animation-delay: .15s; }
-        .dot:nth-child(3) { animation-delay: .3s; }
-        @keyframes bounce {
-            0%,60%,100% { transform: translateY(0); }
-            30%          { transform: translateY(-6px); }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typeBounce {
+            0%, 80%, 100% { transform: scale(0); background-color: var(--border); }
+            40% { transform: scale(1); background-color: var(--primary-light); }
         }
 
         /* ── SUGGESTIONS ── */
-        .suggestions {
-            padding: 0 24px 16px;
+        .suggestions-wrapper {
+            padding: 0 32px 20px;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
+            background: var(--surface);
         }
-        .suggestion-btn {
+        
+        .suggestion-chip {
             background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text-muted);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 0.78rem;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            font-family: var(--font-body);
+            font-weight: 500;
             cursor: pointer;
-            transition: all .2s;
-            font-family: var(--font);
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        .suggestion-btn:hover {
-            border-color: rgba(0,201,122,0.4);
-            color: var(--accent);
-            background: var(--accent-dim);
+        
+        .suggestion-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--surface-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
         /* ── INPUT AREA ── */
-        .input-wrap {
-            flex-shrink: 0;
-            padding: 16px 20px 20px;
-            background: rgba(26,29,39,0.9);
+        .input-section {
+            padding: 24px 32px 32px;
+            background: var(--surface);
             border-top: 1px solid var(--border);
-            backdrop-filter: blur(20px);
+            z-index: 5;
         }
 
-        .input-row {
+        .input-container {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--surface-2);
+            align-items: flex-end;
+            gap: 12px;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 50px;
-            padding: 6px 6px 6px 20px;
-            transition: border-color .25s, box-shadow .25s;
+            border-radius: var(--radius-md);
+            padding: 8px 8px 8px 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
         }
-        .input-row:focus-within {
-            border-color: rgba(0,201,122,0.4);
-            box-shadow: 0 0 0 3px rgba(0,201,122,0.07);
+        
+        .input-container:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--accent-bg);
         }
 
-        .input-row input {
+        .input-container textarea {
             flex: 1;
             background: transparent;
             border: none;
             outline: none;
-            font-family: var(--font);
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            padding: 6px 0;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            resize: none;
+            max-height: 120px;
+            padding: 8px 0;
+            line-height: 1.5;
         }
-        .input-row input::placeholder { color: var(--text-muted); }
+        
+        .input-container textarea::placeholder { color: var(--text-light); }
 
-        .send-btn {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: var(--accent);
+        .btn-submit {
+            width: 44px; height: 44px;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            color: white;
             border: none;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: background .2s, transform .1s, box-shadow .2s;
+            transition: all 0.2s ease;
             flex-shrink: 0;
         }
-        .send-btn:hover  { background: #00e88a; box-shadow: 0 0 16px rgba(0,201,122,0.4); }
-        .send-btn:active { transform: scale(.93); }
-        .send-btn:disabled { background: var(--surface-2); cursor: not-allowed; }
-        .send-btn svg { width: 18px; height: 18px; fill: #fff; }
+        
+        .btn-submit:hover:not(:disabled) { 
+            background: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 62, 43, 0.2);
+        }
+        
+        .btn-submit:active:not(:disabled) { transform: translateY(1px); }
+        .btn-submit:disabled { background: var(--border); cursor: not-allowed; color: var(--text-light); }
+        
+        .btn-submit svg { width: 18px; height: 18px; fill: currentColor; }
 
-        .input-footer {
+        .legal-disclaimer {
             text-align: center;
-            font-size: 0.67rem;
-            color: var(--text-muted);
-            margin-top: 10px;
-            opacity: .7;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 16px;
+            letter-spacing: 0.02em;
         }
 
-        /* ── WELCOME ── */
-        .welcome {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 40px 20px 10px;
-            gap: 12px;
-        }
-        .welcome-icon { font-size: 44px; }
-        .welcome h2 { font-size: 1.15rem; font-weight: 600; }
-        .welcome p  { font-size: 0.85rem; color: var(--text-muted); max-width: 360px; }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 600px) {
-            .app { max-width: 100%; }
-            .bubble { max-width: 88%; }
-            .header { padding: 14px 16px; }
-            .chat-box { padding: 20px 14px; }
-            .input-wrap { padding: 12px 14px 16px; }
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header { padding: 16px 20px; }
+            .chat-box { padding: 20px; }
+            .suggestions-wrapper { padding: 0 20px 16px; }
+            .input-section { padding: 16px 20px 24px; }
+            .welcome-section h2 { font-size: 1.75rem; }
+            .bubble { max-width: 90%; }
         }
     </style>
 </head>
 <body>
 
-<div class="app">
+<div class="app-container">
 
     <!-- HEADER -->
     <header class="header">
-        <div class="header-icon">🚦</div>
-        <div class="header-text">
-            <h1>Assistant Code de la Route</h1>
-            <p>Décret officiel du Sénégal · 766 articles indexés</p>
+        <div class="header-logo">
+            <svg viewBox="0 0 24 24"><path d="M12 22L2 12l10-10 10 10-10 10zm0-2.828l7.172-7.172L12 4.828 4.828 12 12 19.172zM12 16a4 4 0 110-8 4 4 0 010 8z"/></svg>
         </div>
-        <div class="status-dot" title="Système opérationnel"></div>
+        <div class="header-content">
+            <h1>Code de la Route</h1>
+            <p>Assistant Juridique · Sénégal</p>
+        </div>
+        <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>En ligne</span>
+        </div>
     </header>
 
     <!-- CHAT -->
     <main class="chat-box" id="chat-box">
-        <div class="welcome">
-            <div class="welcome-icon">📋</div>
-            <h2>Bonjour, comment puis-je vous aider ?</h2>
-            <p>Posez vos questions sur la réglementation routière sénégalaise. Je citerai les articles officiels.</p>
+        <div class="welcome-section">
+            <div class="welcome-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v6h6v10H6zm2-3h8v2H8v-2zm0-4h8v2H8v-2z"/></svg>
+            </div>
+            <h2>Interrogez la loi.</h2>
+            <p>Posez vos questions sur la réglementation routière sénégalaise. L'assistant parcourt les 766 articles du décret officiel pour vous fournir une réponse précise et sourcée.</p>
         </div>
     </main>
 
     <!-- TYPING -->
-    <div class="typing-row" id="typing-row" style="padding: 0 24px 4px; display:none;">
-        <div class="avatar bot">🤖</div>
-        <div class="typing-bubble visible" id="typing">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
+    <div class="msg-row" id="typing-row" style="display:none; padding: 0 32px;">
+        <div class="avatar bot">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <div class="bubble bot">
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
         </div>
     </div>
 
     <!-- SUGGESTIONS -->
-    <div class="suggestions" id="suggestions">
-        <button class="suggestion-btn" onclick="suggest(this)">Limite de vitesse en ville</button>
-        <button class="suggestion-btn" onclick="suggest(this)">Port de la ceinture de sécurité</button>
-        <button class="suggestion-btn" onclick="suggest(this)">Priorité à droite</button>
-        <button class="suggestion-btn" onclick="suggest(this)">Alcool au volant</button>
+    <div class="suggestions-wrapper" id="suggestions">
+        <button class="suggestion-chip" onclick="suggest(this)">Limitation de vitesse en agglomération</button>
+        <button class="suggestion-chip" onclick="suggest(this)">Règles de priorité à droite</button>
+        <button class="suggestion-chip" onclick="suggest(this)">Port de la ceinture de sécurité</button>
+        <button class="suggestion-chip" onclick="suggest(this)">Sanctions pour alcool au volant</button>
     </div>
 
     <!-- INPUT -->
-    <div class="input-wrap">
-        <div class="input-row">
-            <input type="text" id="q" placeholder="Ex : Quelle est la limitation de vitesse en agglomération ?" autocomplete="off">
-            <button class="send-btn" id="send-btn" onclick="ask()" title="Envoyer">
+    <div class="input-section">
+        <div class="input-container">
+            <textarea id="q" rows="1" placeholder="Ex: Quelle est la vitesse maximale autorisée en ville ?" autocomplete="off" oninput="autoResize(this)"></textarea>
+            <button class="btn-submit" id="send-btn" onclick="ask()" aria-label="Envoyer">
                 <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
             </button>
         </div>
-        <p class="input-footer">Les réponses sont basées uniquement sur le décret officiel du Code de la route sénégalais.</p>
+        <div class="legal-disclaimer">
+            Les réponses sont générées par IA et s'appuient exclusivement sur le Décret d'application du Code de la Route du Sénégal.
+        </div>
     </div>
+
 </div>
 
 <script>
@@ -428,8 +550,24 @@
     const typingRow = document.getElementById('typing-row');
     const sugBox    = document.getElementById('suggestions');
 
+    // Auto-resize textarea
+    function autoResize(el) {
+        el.style.height = 'auto';
+        el.style.height = (el.scrollHeight) + 'px';
+        if(el.value === '') el.style.height = 'auto';
+    }
+
+    // Handle Enter to submit (Shift+Enter for new line)
+    input.addEventListener('keydown', e => { 
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            ask();
+        }
+    });
+
     function suggest(btn) {
         input.value = btn.textContent;
+        autoResize(input);
         ask();
     }
 
@@ -439,7 +577,11 @@
 
         const avatar = document.createElement('div');
         avatar.className = `avatar ${isUser ? 'user' : 'bot'}`;
-        avatar.textContent = isUser ? '👤' : '🤖';
+        if (isUser) {
+            avatar.textContent = 'US'; // User Initials representation
+        } else {
+            avatar.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`;
+        }
 
         const bubble = document.createElement('div');
         bubble.className = `bubble ${isUser ? 'user' : 'bot'}`;
@@ -447,33 +589,33 @@
         if (isUser) {
             bubble.textContent = text;
         } else {
-            // Check if warning
             if (text.startsWith('⚠️')) {
                 bubble.innerHTML = `<div class="warning-box">${text.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>')}</div>`;
             } else {
-                // Render basic markdown bold + line breaks + links
                 let html = text
                     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
                     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" style="color:var(--accent)">$1</a>')
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" style="color:var(--primary); font-weight:500;">$1</a>')
                     .replace(/\n/g,'<br>');
-                bubble.innerHTML = `<div>${html}</div>`;
+                bubble.innerHTML = `<div class="msg-content">${html}</div>`;
             }
 
-            if (articles.length > 0) {
+            if (articles && articles.length > 0) {
                 const sources = document.createElement('div');
-                sources.className = 'sources';
-                sources.innerHTML = `<div class="sources-label">Sources consultées</div>`;
+                sources.className = 'sources-container';
+                sources.innerHTML = `<div class="sources-title">Références au décret</div>`;
+                
                 articles.forEach(a => {
                     const card = document.createElement('details');
-                    card.className = 'source-card';
+                    card.className = 'source-item';
                     card.innerHTML = `
                         <summary>
-                            <span class="chevron">▶</span>
-                            <span class="badge">${escHtml(a.article_number)}</span>
-                            <span class="page-num">p. ${a.page}</span>
+                            <svg class="source-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            <span class="source-badge">${escHtml(a.article_number)}</span>
+                            <span class="source-title-text">Texte intégral</span>
+                            <span class="source-page">Page ${a.page}</span>
                         </summary>
-                        <div class="source-text">${escHtml(a.text.substring(0, 600))}${a.text.length > 600 ? '…' : ''}</div>`;
+                        <div class="source-content">${escHtml(a.text)}</div>`;
                     sources.appendChild(card);
                 });
                 bubble.appendChild(sources);
@@ -483,7 +625,14 @@
         row.appendChild(avatar);
         row.appendChild(bubble);
         chatBox.appendChild(row);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        // Scroll to bottom smoothly
+        setTimeout(() => {
+            chatBox.scrollTo({
+                top: chatBox.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 50);
     }
 
     function escHtml(s) {
@@ -492,8 +641,16 @@
 
     function setLoading(on) {
         sendBtn.disabled = on;
+        input.disabled = on;
         typingRow.style.display = on ? 'flex' : 'none';
-        chatBox.scrollTop = chatBox.scrollHeight;
+        if(on) {
+            setTimeout(() => {
+                chatBox.scrollTo({
+                    top: chatBox.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 50);
+        }
     }
 
     async function ask() {
@@ -502,7 +659,10 @@
 
         sugBox.style.display = 'none';
         appendMsg(q, true);
+        
         input.value = '';
+        input.style.height = 'auto'; // reset height
+        
         setLoading(true);
 
         try {
@@ -516,11 +676,9 @@
             appendMsg(data.answer, false, data.articles || []);
         } catch(e) {
             setLoading(false);
-            appendMsg('⚠️ Impossible de joindre le serveur. Vérifiez votre connexion.', false);
+            appendMsg('⚠️ Connexion au serveur impossible. Veuillez vérifier votre réseau.', false);
         }
     }
-
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') ask(); });
 </script>
 </body>
 </html>
