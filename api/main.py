@@ -123,7 +123,11 @@ RÉPONSE :"""
         )
         answer = response.text
     except Exception as e:
-        answer = f"Erreur lors de la génération avec Gemini : {str(e)}"
+        err = str(e)
+        if "429" in err or "RESOURCE_EXHAUSTED" in err:
+            answer = "⚠️ Le quota journalier de l'API Gemini est atteint. Veuillez réessayer dans quelques heures ou vérifier votre plan sur [Google AI Studio](https://aistudio.google.com/)."
+        else:
+            answer = f"Erreur lors de la génération avec Gemini : {err}"
 
     return AnswerResponse(
         answer=answer,
