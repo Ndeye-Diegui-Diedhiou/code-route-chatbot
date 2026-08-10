@@ -10,8 +10,14 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./db.sqlite3")
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
+is_postgres = DATABASE_URL.startswith("postgresql")
+
+# Supabase exige SSL — on l'ajoute si absent
+if is_postgres and "sslmode" not in DATABASE_URL:
+    DATABASE_URL += "?sslmode=require"
+
 # SQLite nécessite check_same_thread=False; PostgreSQL non
-connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+connect_args = {"check_same_thread": False} if not is_postgres else {}
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
