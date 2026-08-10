@@ -13,15 +13,14 @@
 
         :root {
             /* Palette Premium : Papier & Vert Forêt */
-            --bg-color:        #F9FAEC; /* Très léger crème/vert pâle */
             --bg-color:        #F9F9F8;
             --surface:         #FFFFFF;
             --surface-hover:   #F3F4F1;
             --border:          #E2E4E0;
             
-            --primary:         #0F3E2B; /* Vert forêt très sombre, officiel */
+            --primary:         #0F3E2B;
             --primary-light:   #1A5C42;
-            --accent-gold:     #C4A163; /* Or discret */
+            --accent-gold:     #C4A163;
             --accent-bg:       rgba(15, 62, 43, 0.04);
             
             --text-main:       #1D211F;
@@ -30,6 +29,7 @@
             
             --shadow-sm:       0 2px 8px rgba(15, 62, 43, 0.04);
             --shadow-md:       0 8px 24px rgba(15, 62, 43, 0.06);
+            --shadow-lg:       0 20px 40px rgba(0, 0, 0, 0.1);
             
             --radius-lg:       12px;
             --radius-md:       8px;
@@ -50,7 +50,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ── LAYOUT ── */
         .app-container {
             display: flex;
             flex-direction: column;
@@ -113,19 +112,167 @@
             margin-top: 4px;
         }
 
-        .status-indicator {
+        .user-menu {
             margin-left: auto;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 500;
+            gap: 12px;
         }
-        .status-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: #2E965D;
+
+        .auth-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .auth-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .quota-badge {
+            display: none; /* Masqué si non connecté */
+            background: var(--accent-bg);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--accent-gold);
+        }
+        .quota-badge.premium {
+            background: var(--accent-gold);
+            color: white;
+            border-color: var(--accent-gold);
+        }
+
+        /* ── MODALS ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-card {
+            background: var(--surface);
+            width: 100%;
+            max-width: 400px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .modal-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+        }
+
+        .btn-full {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .btn-full:hover { background: var(--primary-light); }
+        
+        .modal-toggle {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .modal-toggle a {
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* ── PAYWALL OPTIONS ── */
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .payment-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+        .payment-btn:hover {
+            border-color: var(--primary);
+            background: var(--surface-hover);
+        }
+        .payment-btn img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 4px;
         }
 
         /* ── CHAT AREA ── */
@@ -139,7 +286,6 @@
             scroll-behavior: smooth;
             background-color: var(--bg-color);
         }
-        
         .chat-box::-webkit-scrollbar { width: 6px; }
         .chat-box::-webkit-scrollbar-track { background: transparent; }
         .chat-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
@@ -200,17 +346,9 @@
             font-weight: 600;
             font-size: 0.85rem;
         }
-        .avatar.bot {
-            background: var(--primary);
-            color: #fff;
-        }
+        .avatar.bot { background: var(--primary); color: #fff; }
         .avatar.bot svg { width: 18px; height: 18px; fill: currentColor; }
-        
-        .avatar.user {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-        }
+        .avatar.user { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); }
 
         .bubble {
             max-width: 80%;
@@ -228,17 +366,9 @@
             border-top-right-radius: 4px;
         }
         
-        .bubble.bot {
-            color: var(--text-main);
-            padding: 8px 0; /* Minimalist style, no background box */
-        }
+        .bubble.bot { color: var(--text-main); padding: 8px 0; }
+        .bubble.bot strong { color: var(--primary); font-weight: 600; }
         
-        .bubble.bot strong {
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        /* ── WARNINGS ── */
         .bubble.bot .warning-box {
             background: #FFF9ED;
             border-left: 4px solid var(--accent-gold);
@@ -249,13 +379,11 @@
             margin-top: 8px;
         }
 
-        /* ── SOURCES (ACCORDION) ── */
         .sources-container {
             margin-top: 24px;
             padding-top: 20px;
             border-top: 1px solid var(--border);
         }
-        
         .sources-title {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -263,16 +391,9 @@
             color: var(--text-light);
             font-weight: 600;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; gap: 8px;
         }
-        .sources-title::before {
-            content: '';
-            display: block;
-            width: 12px; height: 2px;
-            background: var(--accent-gold);
-        }
+        .sources-title::before { content: ''; width: 12px; height: 2px; background: var(--accent-gold); }
 
         .source-item {
             background: var(--surface);
@@ -282,197 +403,46 @@
             transition: all 0.2s ease;
             overflow: hidden;
         }
-        
-        .source-item:hover {
-            border-color: #CFCFCF;
-            box-shadow: var(--shadow-sm);
-        }
-
         .source-item summary {
-            list-style: none;
-            padding: 14px 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--primary);
-            user-select: none;
+            list-style: none; padding: 14px 16px; cursor: pointer; display: flex; align-items: center;
+            font-size: 0.85rem; font-weight: 600; color: var(--primary); user-select: none;
         }
-        
         .source-item summary::-webkit-details-marker { display: none; }
-        
         .source-badge {
-            background: var(--accent-bg);
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-family: var(--font-body);
-            font-weight: 600;
-            font-size: 0.75rem;
-            margin-right: 12px;
-            border: 1px solid rgba(15, 62, 43, 0.1);
+            background: var(--accent-bg); color: var(--primary); padding: 4px 10px; border-radius: 4px;
+            font-weight: 600; font-size: 0.75rem; margin-right: 12px; border: 1px solid rgba(15, 62, 43, 0.1);
         }
-        
-        .source-page {
-            margin-left: auto;
-            color: var(--text-light);
-            font-weight: 400;
-            font-size: 0.75rem;
-        }
-        
-        .source-icon {
-            margin-right: 12px;
-            color: var(--text-light);
-            transition: transform 0.3s ease;
-        }
-        
-        .source-item[open] summary .source-icon {
-            transform: rotate(90deg);
-            color: var(--primary);
-        }
+        .source-page { margin-left: auto; color: var(--text-light); font-weight: 400; font-size: 0.75rem; }
+        .source-icon { margin-right: 12px; color: var(--text-light); transition: transform 0.3s ease; }
+        .source-item[open] summary .source-icon { transform: rotate(90deg); color: var(--primary); }
+        .source-content { padding: 0 16px 16px 16px; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px; }
 
-        .source-content {
-            padding: 0 16px 16px 16px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.7;
-            border-top: 1px solid var(--border);
-            margin-top: 4px;
-            padding-top: 12px;
-        }
-
-        /* ── TYPING INDICATOR ── */
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            padding: 12px 0;
-        }
-        .typing-dot {
-            width: 6px; height: 6px;
-            background-color: var(--border);
-            border-radius: 50%;
-            animation: typeBounce 1.4s infinite ease-in-out both;
-        }
+        /* ── TYPING ── */
+        .typing-indicator { display: flex; gap: 4px; padding: 12px 0; }
+        .typing-dot { width: 6px; height: 6px; background-color: var(--border); border-radius: 50%; animation: typeBounce 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        
-        @keyframes typeBounce {
-            0%, 80%, 100% { transform: scale(0); background-color: var(--border); }
-            40% { transform: scale(1); background-color: var(--primary-light); }
-        }
+        @keyframes typeBounce { 0%, 80%, 100% { transform: scale(0); background-color: var(--border); } 40% { transform: scale(1); background-color: var(--primary-light); } }
 
         /* ── SUGGESTIONS ── */
-        .suggestions-wrapper {
-            padding: 0 32px 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            background: var(--surface);
-        }
-        
-        .suggestion-chip {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            border-radius: 6px;
-            padding: 10px 16px;
-            font-size: 0.85rem;
-            font-family: var(--font-body);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-        }
-        
-        .suggestion-chip:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--surface-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-        }
+        .suggestions-wrapper { padding: 0 32px 20px; display: flex; flex-wrap: wrap; gap: 10px; background: var(--surface); }
+        .suggestion-chip { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); border-radius: 6px; padding: 10px 16px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .suggestion-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--surface-hover); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
 
-        /* ── INPUT AREA ── */
-        .input-section {
-            padding: 24px 32px 32px;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            z-index: 5;
-        }
-
-        .input-container {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 8px 8px 8px 20px;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .input-container:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--accent-bg);
-        }
-
-        .input-container textarea {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            color: var(--text-main);
-            resize: none;
-            max-height: 120px;
-            padding: 8px 0;
-            line-height: 1.5;
-        }
-        
-        .input-container textarea::placeholder { color: var(--text-light); }
-
-        .btn-submit {
-            width: 44px; height: 44px;
-            border-radius: var(--radius-md);
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-        }
-        
-        .btn-submit:hover:not(:disabled) { 
-            background: var(--primary-light);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(15, 62, 43, 0.2);
-        }
-        
-        .btn-submit:active:not(:disabled) { transform: translateY(1px); }
+        /* ── INPUT ── */
+        .input-section { padding: 24px 32px 32px; background: var(--surface); border-top: 1px solid var(--border); z-index: 5; }
+        .input-container { display: flex; align-items: flex-end; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 8px 8px 8px 20px; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .input-container:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px var(--accent-bg); }
+        .input-container textarea { flex: 1; background: transparent; border: none; outline: none; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-main); resize: none; max-height: 120px; padding: 8px 0; line-height: 1.5; }
+        .btn-submit { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--primary); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; flex-shrink: 0; }
+        .btn-submit:hover:not(:disabled) { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15, 62, 43, 0.2); }
         .btn-submit:disabled { background: var(--border); cursor: not-allowed; color: var(--text-light); }
-        
         .btn-submit svg { width: 18px; height: 18px; fill: currentColor; }
+        .legal-disclaimer { text-align: center; font-size: 0.7rem; color: var(--text-light); margin-top: 16px; }
 
-        .legal-disclaimer {
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-light);
-            margin-top: 16px;
-            letter-spacing: 0.02em;
-        }
-
-        /* Responsive */
         @media (max-width: 640px) {
-            .header { padding: 16px 20px; }
-            .chat-box { padding: 20px; }
-            .suggestions-wrapper { padding: 0 20px 16px; }
-            .input-section { padding: 16px 20px 24px; }
-            .welcome-section h2 { font-size: 1.75rem; }
-            .bubble { max-width: 90%; }
+            .header { padding: 16px 20px; } .chat-box { padding: 20px; } .suggestions-wrapper { padding: 0 20px 16px; } .input-section { padding: 16px 20px 24px; }
+            .welcome-section h2 { font-size: 1.75rem; } .bubble { max-width: 90%; }
         }
     </style>
 </head>
@@ -489,9 +459,9 @@
             <h1>Code de la Route</h1>
             <p>Assistant Révisions · Sénégal</p>
         </div>
-        <div class="status-indicator">
-            <div class="status-dot"></div>
-            <span>En ligne</span>
+        <div class="user-menu">
+            <div id="quota-badge" class="quota-badge">0/5 Gratuites</div>
+            <button id="auth-main-btn" class="auth-btn" onclick="openAuthModal()">Connexion</button>
         </div>
     </header>
 
@@ -502,21 +472,15 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
             </div>
             <h2>Révisez votre Code.</h2>
-            <p>Posez vos questions pour apprendre ou réviser la réglementation routière sénégalaise. Votre coach IA s'appuie sur le décret officiel pour vous donner la bonne réponse.</p>
+            <p>Posez vos questions pour apprendre ou réviser la réglementation routière sénégalaise. L'IA s'appuie sur le décret officiel.</p>
         </div>
     </main>
 
     <!-- TYPING -->
     <div class="msg-row" id="typing-row" style="display:none; padding: 0 32px;">
-        <div class="avatar bot">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        </div>
+        <div class="avatar bot"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
         <div class="bubble bot">
-            <div class="typing-indicator">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            </div>
+            <div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
         </div>
     </div>
 
@@ -524,7 +488,6 @@
     <div class="suggestions-wrapper" id="suggestions">
         <button class="suggestion-chip" onclick="suggest(this)">Quelle est la vitesse max pour un apprenti ?</button>
         <button class="suggestion-chip" onclick="suggest(this)">Dans quel cas puis-je doubler par la droite ?</button>
-        <button class="suggestion-chip" onclick="suggest(this)">Qui est dispensé de la ceinture en ville ?</button>
         <button class="suggestion-chip" onclick="suggest(this)">À quelle distance d'un virage stationner ?</button>
     </div>
 
@@ -537,10 +500,66 @@
             </button>
         </div>
         <div class="legal-disclaimer">
-            Les réponses sont générées par IA et s'appuient exclusivement sur le Décret d'application du Code de la Route du Sénégal.
+            Les réponses sont générées par IA et s'appuient exclusivement sur le Décret d'application du Code de la Route.
         </div>
     </div>
+</div>
 
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+        <h3 class="modal-title" id="auth-title">Connexion</h3>
+        <p class="modal-subtitle" id="auth-subtitle">Connectez-vous pour poser vos questions au coach IA.</p>
+        
+        <div id="auth-error" style="color: red; font-size: 0.8rem; margin-bottom: 10px; display: none;"></div>
+
+        <form id="auth-form" onsubmit="handleAuth(event)">
+            <div class="form-group">
+                <label>Adresse Email</label>
+                <input type="email" id="auth-email" required placeholder="nom@exemple.com">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="auth-password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-full" id="auth-submit-btn">Se connecter</button>
+        </form>
+
+        <div class="modal-toggle">
+            <span id="auth-toggle-text">Pas encore de compte ?</span>
+            <a onclick="toggleAuthMode()" id="auth-toggle-link">S'inscrire</a>
+        </div>
+    </div>
+</div>
+
+<!-- PAYWALL MODAL -->
+<div class="modal-overlay" id="paywall-modal">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closePaywallModal()">&times;</button>
+        <h3 class="modal-title">Quota Atteint 🔒</h3>
+        <p class="modal-subtitle">Vous avez utilisé vos 5 questions gratuites d'aujourd'hui. Passez Premium pour un accès illimité au coach IA !</p>
+        
+        <div class="payment-options">
+            <button class="payment-btn" onclick="mockPayment('Wave')">
+                <img src="https://play-lh.googleusercontent.com/yFzESoB9P48fXz5gEom2w29d91l1-RkGgZ4g4ZJ2v4hJkF10Yy1E41L21hN5O3n5H6g=w240-h480-rw" alt="Wave" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMWNiMGY2Ii8+PC9zdmc+'">
+                Payer avec Wave
+            </button>
+            <button class="payment-btn" onclick="mockPayment('Orange Money')">
+                <img src="https://play-lh.googleusercontent.com/V2zX6w_WkZ4M3T6h4g5O3Q1gD5zY-U31h9F5o4w514F6c3G9H1s2V3P7F5M1D8K7T4A=w240-h480-rw" alt="OM" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjZmY2NjAwIi8+PC9zdmc+'">
+                Orange Money
+            </button>
+            <button class="payment-btn" onclick="mockPayment('PayDunya')">
+                <img src="https://paydunya.com/assets/images/logo/logo-blue.svg" alt="PayDunya" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMDI4OGQxIi8+PC9zdmc+'">
+                PayDunya
+            </button>
+            <button class="payment-btn" onclick="mockPayment('TouchPoint')">
+                <span style="background: #2E965D; color: white; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; font-weight:bold;">TP</span>
+                TouchPoint
+            </button>
+        </div>
+        <p style="text-align: center; font-size: 0.75rem; color: var(--text-light); margin-top: 20px;">Ceci est une démonstration. Aucun montant ne sera débité.</p>
+    </div>
 </div>
 
 <script>
@@ -549,20 +568,138 @@
     const sendBtn   = document.getElementById('send-btn');
     const typingRow = document.getElementById('typing-row');
     const sugBox    = document.getElementById('suggestions');
+    const authModal = document.getElementById('auth-modal');
+    const paywallModal = document.getElementById('paywall-modal');
+    
+    let isLoginMode = true;
 
-    // Auto-resize textarea
+    // ----- AUTH & SESSION MANAGEMENT -----
+    function getToken() { return localStorage.getItem('token'); }
+    function setToken(t) { localStorage.setItem('token', t); }
+    function logout() { localStorage.removeItem('token'); checkSession(); }
+
+    async function checkSession() {
+        const token = getToken();
+        const authBtn = document.getElementById('auth-main-btn');
+        const badge = document.getElementById('quota-badge');
+        
+        if (!token) {
+            authBtn.textContent = "Connexion";
+            authBtn.onclick = openAuthModal;
+            badge.style.display = 'none';
+            return;
+        }
+
+        try {
+            const res = await fetch('/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                authBtn.textContent = "Déconnexion";
+                authBtn.onclick = logout;
+                
+                badge.style.display = 'block';
+                if (data.is_premium) {
+                    badge.textContent = "Premium";
+                    badge.className = "quota-badge premium";
+                } else {
+                    badge.textContent = `${data.questions_remaining}/5 Gratuit`;
+                    badge.className = "quota-badge";
+                }
+            } else {
+                logout();
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    // Call on load
+    checkSession();
+
+    // ----- MODAL LOGIC -----
+    function openAuthModal() {
+        authModal.style.display = 'flex';
+        document.getElementById('auth-error').style.display = 'none';
+    }
+    function closeAuthModal() { authModal.style.display = 'none'; }
+    function openPaywallModal() { paywallModal.style.display = 'flex'; }
+    function closePaywallModal() { paywallModal.style.display = 'none'; }
+
+    function toggleAuthMode() {
+        isLoginMode = !isLoginMode;
+        document.getElementById('auth-title').textContent = isLoginMode ? "Connexion" : "Inscription";
+        document.getElementById('auth-submit-btn').textContent = isLoginMode ? "Se connecter" : "Créer mon compte";
+        document.getElementById('auth-toggle-text').textContent = isLoginMode ? "Pas encore de compte ?" : "Déjà un compte ?";
+        document.getElementById('auth-toggle-link').textContent = isLoginMode ? "S'inscrire" : "Se connecter";
+    }
+
+    async function handleAuth(e) {
+        e.preventDefault();
+        const email = document.getElementById('auth-email').value;
+        const password = document.getElementById('auth-password').value;
+        const errDiv = document.getElementById('auth-error');
+        
+        const url = isLoginMode ? '/login' : '/register';
+        
+        try {
+            let body, headers;
+            if (isLoginMode) {
+                body = new URLSearchParams();
+                body.append('username', email);
+                body.append('password', password);
+                headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            } else {
+                body = JSON.stringify({ email, password });
+                headers = { 'Content-Type': 'application/json' };
+            }
+
+            const res = await fetch(url, { method: 'POST', headers, body });
+            const data = await res.json();
+            
+            if (res.ok) {
+                setToken(data.access_token);
+                closeAuthModal();
+                checkSession();
+            } else {
+                errDiv.textContent = data.detail || "Erreur d'authentification";
+                errDiv.style.display = 'block';
+            }
+        } catch(err) {
+            errDiv.textContent = "Impossible de joindre le serveur.";
+            errDiv.style.display = 'block';
+        }
+    }
+
+    async function mockPayment(provider) {
+        const token = getToken();
+        if (!token) return;
+        
+        try {
+            const res = await fetch('/upgrade', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                alert(`Paiement ${provider} validé ! Vous êtes maintenant Premium.`);
+                closePaywallModal();
+                checkSession();
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // ----- CHAT LOGIC -----
     function autoResize(el) {
         el.style.height = 'auto';
         el.style.height = (el.scrollHeight) + 'px';
         if(el.value === '') el.style.height = 'auto';
     }
 
-    // Handle Enter to submit (Shift+Enter for new line)
     input.addEventListener('keydown', e => { 
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            ask();
-        }
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(); }
     });
 
     function suggest(btn) {
@@ -590,7 +727,7 @@
             bubble.textContent = text;
         } else {
             if (text.startsWith('⚠️')) {
-                bubble.innerHTML = `<div class="warning-box">${text.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>')}</div>`;
+                bubble.innerHTML = `<div class="warning-box">${text}</div>`;
             } else {
                 let html = text
                     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -626,34 +763,25 @@
         row.appendChild(bubble);
         chatBox.appendChild(row);
         
-        // Scroll to bottom smoothly
-        setTimeout(() => {
-            chatBox.scrollTo({
-                top: chatBox.scrollHeight,
-                behavior: 'smooth'
-            });
-        }, 50);
+        setTimeout(() => { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }, 50);
     }
 
-    function escHtml(s) {
-        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+    function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     function setLoading(on) {
         sendBtn.disabled = on;
         input.disabled = on;
         typingRow.style.display = on ? 'flex' : 'none';
-        if(on) {
-            setTimeout(() => {
-                chatBox.scrollTo({
-                    top: chatBox.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 50);
-        }
+        if(on) setTimeout(() => { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }, 50);
     }
 
     async function ask() {
+        const token = getToken();
+        if (!token) {
+            openAuthModal();
+            return;
+        }
+
         const q = input.value.trim();
         if (!q) return;
 
@@ -661,18 +789,45 @@
         appendMsg(q, true);
         
         input.value = '';
-        input.style.height = 'auto'; // reset height
+        input.style.height = 'auto';
         
         setLoading(true);
 
         try {
             const res  = await fetch('/ask', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
                 body: JSON.stringify({ question: q })
             });
+
+            if (res.status === 401) {
+                setLoading(false);
+                logout();
+                openAuthModal();
+                return;
+            }
+            if (res.status === 403) {
+                setLoading(false);
+                openPaywallModal();
+                return;
+            }
+
             const data = await res.json();
             setLoading(false);
+            
+            // Update quota badge if needed
+            const badge = document.getElementById('quota-badge');
+            if (data.is_premium) {
+                badge.textContent = "Premium";
+                badge.className = "quota-badge premium";
+            } else {
+                badge.textContent = `${data.questions_remaining}/5 Gratuit`;
+                badge.className = "quota-badge";
+            }
+
             appendMsg(data.answer, false, data.articles || []);
         } catch(e) {
             setLoading(false);
