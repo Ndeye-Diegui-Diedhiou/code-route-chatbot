@@ -68,8 +68,14 @@ def ingest_to_chroma(chunks):
     print("Initialisation de ChromaDB...")
     client = chromadb.PersistentClient(path=CHROMA_DB_DIR)
 
-    # Utilisation de la fonction d'embedding légère ONNX (pas de PyTorch)
-    emb_fn = DefaultEmbeddingFunction()
+    import pathlib
+    from chromadb.utils.embedding_functions.onnx_mini_lm_l6_v2 import ONNXMiniLM_L6_V2
+
+    # Forcer le cache du modèle ONNX dans le dossier du projet pour qu'il soit conservé sur Render
+    ONNXMiniLM_L6_V2.DOWNLOAD_PATH = pathlib.Path(os.getcwd()) / "chroma_onnx_cache" / "all-MiniLM-L6-v2"
+    
+    # Utilisation de la fonction d'embedding légère ONNX
+    emb_fn = ONNXMiniLM_L6_V2()
 
     try:
         client.delete_collection(name=COLLECTION_NAME)

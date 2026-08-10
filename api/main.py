@@ -23,9 +23,15 @@ MODEL = "llama-3.3-70b-versatile"
 CHROMA_DB_DIR = "chroma_db"
 COLLECTION_NAME = "code_route"
 
+import pathlib
+from chromadb.utils.embedding_functions.onnx_mini_lm_l6_v2 import ONNXMiniLM_L6_V2
+
+# Forcer le cache du modèle ONNX dans le dossier du projet pour qu'il soit conservé sur Render
+ONNXMiniLM_L6_V2.DOWNLOAD_PATH = pathlib.Path(os.getcwd()) / "chroma_onnx_cache" / "all-MiniLM-L6-v2"
+
 try:
     chroma_client = chromadb.PersistentClient(path=CHROMA_DB_DIR)
-    emb_fn = DefaultEmbeddingFunction()
+    emb_fn = ONNXMiniLM_L6_V2()
     collection = chroma_client.get_collection(name=COLLECTION_NAME, embedding_function=emb_fn)
     print(f"ChromaDB chargée : {collection.count()} documents.")
 except Exception as e:

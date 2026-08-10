@@ -5,3 +5,4 @@ env/
 *.pyc
 premium-web-design/
 chroma_db/
+chroma_onnx_cache/
