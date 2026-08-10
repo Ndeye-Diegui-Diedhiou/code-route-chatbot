@@ -24,7 +24,11 @@ import jwt
 load_dotenv()
 
 # Création des tables de la base de données
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+    print("Base de données initialisée avec succès.")
+except Exception as e:
+    print(f"Erreur lors de la connexion à la base de données : {e}")
 
 # Configuration de la sécurité JWT
 SECRET_KEY = os.getenv("SECRET_KEY", "super_secret_code_route_key_2026")
