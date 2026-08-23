@@ -1,7 +1,7 @@
 <div align="center">
   <h1>🚦 Code de la Route Sénégalais<br>Coach IA (RAG)</h1>
   <p>
-    <strong>Un assistant intelligent pour réviser et interroger le décret officiel du Code de la Route sénégalais.</strong>
+    <strong>Un assistant intelligent pour réviser et interroger le Code de la Route sénégalais.</strong>
   </p>
   <p>
     <a href="https://code-route-chatbot.onrender.com"><strong>Accéder à la démo en ligne »</strong></a>
